@@ -1,0 +1,158 @@
+{% extends "base.html" %} {% block title %}Book Parking - Parking Management
+System{% endblock %} {% block content %}
+<div class="row mb-4">
+  <div class="col-12" style="color: #dfd0b8">
+    <h2><i class="fas fa-car me-2"></i>Book Parking Spot</h2>
+    <p>Select an available parking lot to book your spot.</p>
+    <!-- Search Bar -->
+    <form method="get" action="{{ url_for('book_parking') }}" class="mb-3">
+      <div class="input-group">
+        <input
+          type="text"
+          class="form-control"
+          name="q"
+          placeholder="Search by location, address, or pin code"
+          value="{{ request.args.get('q', '') }}"
+          style="background-color: #948979; color: #222831 !important"
+        />
+        <button
+          class="btn"
+          type="submit"
+          style="background-color: #dfd0b8; color: #222831"
+        >
+          <i class="fas fa-search"></i> Search
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- Available spots cards -->
+{% if available_lots %}
+<div class="row">
+  {% for lot_info in available_lots %}
+  <div class="col-md-6 col-lg-4 mb-4">
+    <div class="card h-100">
+      <div class="card-body" style="background-color: #dfd0b8; color: #222831">
+        <h5 class="card-title">
+          <i class="fas fa-building me-2"></i>
+          {{ lot_info.lot.location_name }}
+        </h5>
+
+        <div class="mb-3">
+          <p class="card-text">
+            <i class="fas fa-map-marker-alt me-2 text-muted"></i>
+            {{ lot_info.lot.address }}
+          </p>
+          <p class="card-text">
+            <i class="fas fa-map-pin me-2 text-muted"></i>
+            Pin Code: {{ lot_info.lot.pin_code }}
+          </p>
+        </div>
+
+        <div class="row mb-3">
+          <div class="col-6">
+            <div class="text-center" style="color: black">
+              <h6>{{ lot_info.available_spots }}</h6>
+              <small>Available Spots</small>
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="text-center" style="color: black">
+              <h6>₹ {{ "%.2f"|format(lot_info.lot.hourly_rate) }} / hour</h6>
+              <small>Price</small>
+            </div>
+          </div>
+        </div>
+
+        <div class="d-grid">
+          <a
+            href="{{ url_for('book_spot', lot_id=lot_info.lot.id) }}"
+            class="btn"
+            style="background-color: #948979"
+            onclick="return confirm('Are you sure you want to book a spot in {{ lot_info.lot.location_name }}?')"
+          >
+            <i class="fas fa-car me-2"></i>Book Spot
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+<!-- Not Available -->
+{% else %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <div class="card" style="color: #222831; background-color: #dfd0b8">
+      <div class="card-body text-center py-5">
+        <i class="fas fa-car fa-3x text-muted mb-3"></i>
+        <h4 class="text-muted">No Available Parking Lots</h4>
+        <p class="text-muted mb-4">
+          All parking lots are currently full or no parking lots have been
+          created yet.
+        </p>
+        <a
+          href="{{ url_for('user_dashboard') }}"
+          class="btn"
+          style="background-color: #948979; color: #222831"
+        >
+          <i class="fas fa-arrow-left me-2"></i>Back to Dashboard
+        </a>
+      </div>
+    </div>
+  </div>
+</div>
+{% endif %}
+
+<!-- Booking Information -->
+<div class="row mt-4">
+  <div class="col-12">
+    <div class="card">
+      <div
+        class="card-header"
+        style="background-color: #948979; color: #222831"
+      >
+        <h5><i class="fas fa-info-circle me-2"></i>Booking Information</h5>
+      </div>
+      <div class="card-body" style="background-color: #dfd0b8; color: #393e46">
+        <div class="row">
+          <div class="col-md-4">
+            <h6><i class="fas fa-clock me-2"></i>How it works</h6>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-check me-2"></i>Select a parking lot</li>
+              <li>
+                <i class="fas fa-check me-2"></i>Spot is automatically assigned
+              </li>
+              <li><i class="fas fa-check me-2"></i>Pay only for time used</li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <h6><i class="fas fa-dollar-sign me-2"></i>Pricing</h6>
+            <ul class="list-unstyled">
+              <li><i class="fas fa-info me-2"></i>Charged per hour</li>
+              <li><i class="fas fa-info me-2"></i>Rounded to nearest hour</li>
+              <li><i class="fas fa-info me-2"></i>Pay when you leave</li>
+            </ul>
+          </div>
+          <div class="col-md-4">
+            <h6>
+              <i class="fas fa-exclamation-triangle me-2"></i>Important Notes
+            </h6>
+            <ul class="list-unstyled">
+              <li>
+                <i class="fas fa-check me-2"></i>One active reservation per user
+              </li>
+              <li>
+                <i class="fas fa-check me-2"></i>Release spot when leaving
+              </li>
+              <li><i class="fas fa-check me-2"></i>24/7 availability</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

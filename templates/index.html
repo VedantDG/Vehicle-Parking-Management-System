@@ -1,0 +1,142 @@
+{% extends "base.html" %} {% block title %}Parking Management System{% endblock
+%} {% block content %}
+<div class="row justify-content-center">
+  <div class="col-xl-10 text-center">
+    <div class="card bg-transparent">
+      <div class="card-body py-5" style="color: #dfd0b8">
+        <h1 class="display-9 mb-4">
+          Welcome to Vehicle Parking <br />Management System
+        </h1>
+        <p class="lead mb-4" style="color: #dfd0b8">
+          Easily manage and reserve parking spaces with our all-in-one parking
+          management system.
+        </p>
+<!-- User Login -->
+        <div class="row mt-5">
+          <div class="col-md-6 mb-5">
+            <div
+              class="card border border-dark-subtle h-100"
+              style="
+                background: linear-gradient(
+                  to right,
+                  rgba(0, 0, 0, 0.9),
+                  rgba(50, 50, 50, 0.7)
+                );
+                width: 400px;
+              "
+            >
+              <div class="card-body" style="color: #dfd0b8">
+                <i class="fas fa-car fa-3x mb-3" style="color: #dfd0b8"></i>
+                <h4>User Login</h4>
+                <p>
+                  Log in to your account to manage your parking effortlessly.
+                </p>
+                <a
+                  href="{{ url_for('login') }}"
+                  class="btn"
+                  style="background-color: #222831; color: #dfd0b8"
+                >
+                  <i class="fas fa-sign-in-alt me-2"></i>User Login
+                </a>
+              </div>
+            </div>
+          </div>
+<!-- User Register -->
+          <div class="col-xl-6 mb-5">
+            <div
+              class="card border border-dark-subtle h-100"
+              style="
+                background: linear-gradient(
+                  to right,
+                  rgba(0, 0, 0, 0.9),
+                  rgba(50, 50, 50, 0.7)
+                );
+                width: 400px;
+              "
+            >
+              <div class="card-body" style="color: #dfd0b8">
+                <i
+                  class="fas fa-solid fa-user fa-3x mb-3"
+                  style="color: #dfd0b8"
+                ></i>
+                <h4>User Registration</h4>
+                <p>
+                  Create an account to enjoy the benefits of our parking
+                  management system.
+                </p>
+                <a
+                  href="{{ url_for('register') }}"
+                  class="btn"
+                  style="background-color: #dfd0b8"
+                >
+                  <i class="fa-solid fa-user-plus me-2"></i> Register Now
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+<!-- Features Cards -->
+        <div class="row mt-4">
+          <div class="col-md-4 mb-3">
+            <div
+              class="card border border-dark-subtle h-100"
+              style="background: #222831; color: #dfd0b8"
+            >
+              <div class="card-body text-center">
+                <i
+                  class="fas fa-clock fa-2x mb-2"
+                  style="
+                    color: #dfd0b8;
+                    text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                  "
+                ></i>
+                <h6>24/7 Availability</h6>
+                <small>Book anytime, anywhere</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <div
+              class="card border border-dark-subtle h-100"
+              style="background: #222831; color: #dfd0b8"
+            >
+              <div class="card-body text-center">
+                <i
+                  class="fas fa-shield-alt fa-2x mb-2"
+                  style="
+                    color: #dfd0b8;
+                    text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                  "
+                ></i>
+                <h6>Secure System</h6>
+                <small>Safe and reliable</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-md-4 mb-3">
+            <div
+              class="card border border-dark-subtle h-100"
+              style="background: #222831; color: #dfd0b8"
+            >
+              <div class="card-body text-center">
+                <i
+                  class="fas fa-chart-line fa-2x mb-2"
+                  style="
+                    color: #dfd0b8; /* Pure white */
+                    text-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
+                  "
+                ></i>
+                <h6>Real-time Updates</h6>
+                <small>Live parking status</small>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

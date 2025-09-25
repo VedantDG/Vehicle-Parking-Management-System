@@ -1,0 +1,305 @@
+{% extends "base.html" %} {% block title %}User Dashboard - Parking Management
+System{% endblock %} {% block content %}
+<div class="row mb-4">
+  <div class="col-12" style="color: #dfd0b8">
+    <h2>
+      <i class="fas fa-tachometer-alt me-2"></i>{{ session['username'] }}'s
+      Dashboard
+    </h2>
+    <p>Welcome back, {{ session['username'] }}!</p>
+  </div>
+</div>
+
+<!-- Statistics Cards -->
+<div class="row mb-4">
+  <div class="col-md-3 mb-3">
+    <div
+      class="card stats-card"
+      style="
+        background: linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0.9),
+          rgba(50, 50, 50, 0.7)
+        );
+      "
+    >
+      <div class="card-body text-center">
+        <i class="fas fa-car fa-2x mb-2"></i>
+        <h4>{{ active_reservations|length }}</h4>
+        <p class="mb-0">Active Reservations</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-3">
+    <div
+      class="card stats-card"
+      style="
+        background: linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0.9),
+          rgba(50, 50, 50, 0.7)
+        ); 
+        color: white;
+      "
+    >
+      <div class="card-body text-center">
+        <i class="fas fa-clock fa-2x mb-2"></i>
+        <h4>{{ total_parking_time }}</h4>
+        <p class="mb-0">Total Hours Parked</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-3">
+    <div
+      class="card stats-card"
+      style="
+        background: linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0.9),
+          rgba(50, 50, 50, 0.7)
+        );
+        color: white;
+      "
+    >
+      <div class="card-body text-center">
+        <i class="fas fa-history fa-2x mb-2"></i>
+        <h4>{{ completed_reservations|length }}</h4>
+        <p class="mb-0">Completed Sessions</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-md-3 mb-3">
+    <div
+      class="card stats-card"
+      style="
+        background: linear-gradient(
+          to right,
+          rgba(0, 0, 0, 0.9),
+          rgba(50, 50, 50, 0.7)
+        );
+        color: white;
+      "
+    >
+      <div class="card-body text-center">
+        <i class="fas fa-indian-rupee-sign fa-2x mb-2"></i>
+        <h4>₹ {{ "%.2f"|format(total_cost) }}</h4>
+        <p class="mb-0">Total Spent</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card">
+      <div
+        class="card-header"
+        style="background-color: #948979; color: #222831"
+      >
+        <h5><i class="fas fa-bolt me-2"></i>Quick Actions</h5>
+      </div>
+      <div class="card-body" style="background-color: #dfd0b8; color: #393e46">
+        <div class="row">
+          <div class="col-md-4 mb-2">
+            <a
+              href="{{ url_for('book_parking') }}"
+              class="btn w-100"
+              style="background-color: #948979; color: #222831"
+            >
+              <i class="fas fa-plus me-2"></i>Book Parking Spot
+            </a>
+          </div>
+          <div class="col-md-4 mb-2">
+            <a
+              href="{{ url_for('book_parking') }}"
+              class="btn w-100"
+              style="background-color: #948979; color: #222831"
+            >
+              <i class="fas fa-search me-2"></i>Find Available Spots
+            </a>
+          </div>
+          <div class="col-md-4 mb-2">
+            <button
+              class="btn w-100"
+              onclick="location.reload()"
+              style="background-color: #948979; color: #222831"
+            >
+              <i class="fas fa-sync-alt me-2"></i>Refresh Dashboard
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Active Reservations -->
+<div class="row mb-4">
+  <div class="col-12">
+    <div class="card">
+      <div
+        class="card-header"
+        style="background-color: #948979; color: #222831"
+      >
+        <h5><i class="fas fa-car me-2"></i>Active Reservations</h5>
+      </div>
+      <div class="card-body" style="background-color: #dfd0b8; color: #393e46">
+        {% if active_reservations %}
+        <div class="table-responsive">
+          <table class="table table-hover" style="border-bottom: #393e46">
+            <thead style="background-color: #948979; color: #222831">
+              <tr>
+                <th>Parking Lot</th>
+                <th>Spot Number</th>
+                <th>Parking Time</th>
+                <th>Duration</th>
+                <th>Current Cost</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for reservation in active_reservations %}
+              <tr>
+                <td>
+                  <strong
+                    >{{ reservation.parking_spot.parking_lot.location_name
+                    }}</strong
+                  ><br />
+                  <small class="text-muted"
+                    >{{ reservation.parking_spot.parking_lot.address }}</small
+                  >
+                </td>
+                <td>
+                  <span>Spot {{ reservation.parking_spot.spot_number }}</span>
+                </td>
+                <td>
+                  {{ reservation.entry_time.strftime('%Y-%m-%d %H:%M') }}
+                </td>
+                <td>
+                  {{ reservation.duration_hours }}h {{ reservation.duration_minutes }}m
+                </td>
+                <td>₹ {{ "%.2f"|format(reservation.current_cost) }}</td>
+                <td>
+                  <a
+                    href="{{ url_for('release_spot', reservation_id=reservation.id) }}"
+                    class="btn btn-sm"
+                    style="background-color: #948979; color: #222831"
+                    onclick="return confirm('Are you sure you want to release this parking spot?')"
+                  >
+                    <i class="fas fa-sign-out-alt me-1"></i>Release Spot
+                  </a>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+          <i class="fas fa-car fa-3x text-muted mb-3"></i>
+          <h5 class="text-muted">No Active Reservations</h5>
+          <p class="text-muted">
+            You don't have any active parking reservations.
+          </p>
+          <a
+            href="{{ url_for('book_parking') }}"
+            class="btn"
+            style="background-color: #948979; color: #222831"
+          >
+            <i class="fas fa-plus me-2"></i>Book a Spot
+          </a>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Parking History -->
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div
+        class="card-header"
+        style="background-color: #948979; color: #222831"
+      >
+        <h5><i class="fas fa-history me-2"></i>Recent Parking History</h5>
+      </div>
+      <div class="card-body" style="background-color: #dfd0b8; color: #393e46">
+        {% if completed_reservations %}
+        <div class="table-responsive">
+          <table class="table table-hover" style="border-bottom: #393e46">
+            <thead style="background-color: #948979; color: #222831">
+              <tr>
+                <th>Parking Lot</th>
+                <th>Spot Number</th>
+                <th>Parking Time</th>
+                <th>Leaving Time</th>
+                <th>Duration</th>
+                <th>Cost</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for reservation in completed_reservations %}
+              <tr>
+                <td>
+                  <strong
+                    >{{ reservation.parking_spot.parking_lot.location_name
+                    }}</strong
+                  ><br />
+                  <small class="text-muted"
+                    >{{ reservation.parking_spot.parking_lot.address }}</small
+                  >
+                </td>
+                <td>
+                  <span>Spot {{ reservation.parking_spot.spot_number }}</span>
+                </td>
+                <td>
+                  {{ reservation.entry_time.strftime('%Y-%m-%d %H:%M') }}
+                </td>
+                <td>
+                  {% if reservation.exit_time %}
+                      {{ reservation.exit_time.strftime('%Y-%m-%d %H:%M') }}
+                  {% else %}
+                      -
+                  {% endif %}
+                </td>
+                <td>
+                  {{ reservation.duration_hours }}h {{ reservation.duration_minutes }}m
+                </td>
+                <td>
+                  <strong>₹{{ "%.2f"|format(reservation.total_cost) }}</strong>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <div class="text-center py-4">
+          <i class="fas fa-history fa-3x text-muted mb-3"></i>
+          <h5 class="text-muted">No Parking History</h5>
+          <p class="text-muted">
+            You haven't completed any parking sessions yet.
+          </p>
+        </div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %} {% block scripts %}
+<script>
+  // Auto-refresh active reservations every 30 seconds
+  setInterval(function() {
+      // Only refresh if there are active reservations
+      {% if active_reservations %}
+          location.reload();
+      {% endif %}
+  }, 30000);
+</script>
+{% endblock %}
